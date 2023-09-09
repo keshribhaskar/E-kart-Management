@@ -3,12 +3,14 @@ package com.assignment.ekart.ekartms.entity;
 import com.assignment.ekart.ekartms.model.CartProduct;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
 @Entity
+@Builder
 @Table(name = "CustomerCart")
 public class CustomerCartEntity {
     @Id
