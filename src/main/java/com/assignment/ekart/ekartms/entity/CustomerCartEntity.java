@@ -3,8 +3,10 @@ package com.assignment.ekart.ekartms.entity;
 import com.assignment.ekart.ekartms.model.CartProduct;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
@@ -12,6 +14,8 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name = "CustomerCart")
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerCartEntity {
     @Id
     @Column(name = "cart_id")

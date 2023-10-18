@@ -25,22 +25,22 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     Environment environment;
     @Autowired
     private CustomerCartRepo customerCartRepo;
-    public Integer addProductToCart(CustomerCart customerCartDTO) {
+    public Integer addProductToCart(CustomerCart customerCart) {
 
         Set<CartProductEntity> cartProducts= new HashSet<>();
         Integer cartId = null;
-        for(CartProduct cartProductDTO : customerCartDTO.getCartProducts()) {
+        for(CartProduct cartProductDetail : customerCart.getCartProducts()) {
             CartProductEntity cartProduct = CartProductEntity.builder()
-                    .productId(cartProductDTO.getProduct().getProductId())
-                    .quantity(cartProductDTO.getQuantity())
+                    .productId(cartProductDetail.getProduct().getProductId())
+                    .quantity(cartProductDetail.getQuantity())
                     .build();
             cartProducts.add(cartProduct);
         }
         Optional<CustomerCartEntity> cartOptional = customerCartRepo
-                .findByCustomerEmailId(customerCartDTO.getCustomerEmailId());
+                .findByCustomerEmailId(customerCart.getCustomerEmailId());
         if(cartOptional.isEmpty()) {
             CustomerCartEntity newCart = CustomerCartEntity.builder()
-                    .customerEmailId(customerCartDTO.getCustomerEmailId())
+                    .customerEmailId(customerCart.getCustomerEmailId())
                     .cartProducts(cartProducts)
                     .build();
             customerCartRepo.save(newCart);
@@ -69,40 +69,34 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     public Set<CartProduct> getProductsFromCart(String customerEmailId) throws Exception {
         Optional<CustomerCartEntity> cartOptional = customerCartRepo
                 .findByCustomerEmailId(customerEmailId);
-        Set<CartProduct> cartProductsDTO = new HashSet<>();
+        Set<CartProduct> cartProductsDetail = new HashSet<>();
         CustomerCartEntity cart = cartOptional.orElseThrow(() ->
-                new Exception(environment.getProperty("CustomerCartService.NO_CART_FOUND")));
+                new Exception("No cart found"));
         if (cart.getCartProducts().isEmpty()) {
-            throw new Exception(environment.getProperty("CustomerCartService.NO_PRODUCT_ADDED_TO_CART"));
+            throw new Exception("No product added to cart");
         }
         Set<CartProductEntity> cartProducts = cart.getCartProducts();
         for (CartProductEntity cartProduct : cartProducts) {
 
-            Product productDTO = Product.builder().productId(cartProduct.getProductId()).build();
-            CartProduct cartProductDTO = CartProduct.builder()
+            Product product = Product.builder().productId(cartProduct.getProductId()).build();
+            CartProduct cartProduct1 = CartProduct.builder()
                     .cartProductId(cartProduct.getCartProductId())
                     .quantity(cartProduct.getQuantity())
-                    .product(productDTO)
+                    .product(product)
                     .build();
-            cartProductsDTO.add(cartProductDTO);
+            cartProductsDetail.add(cartProduct1);
 
         }
-        return cartProductsDTO;
+        return cartProductsDetail;
     }
 
     public void deleteProductFromCart(String customerEmailId, Integer productId) throws Exception {
         Optional<CustomerCartEntity> cartOptional = customerCartRepo.findByCustomerEmailId(customerEmailId);
         CustomerCartEntity cart = cartOptional.orElseThrow(() -> new Exception(
-                environment.getProperty("CustomerCartService.NO_CART_FOUND")));
+                "No cart found"));
         if (cart.getCartProducts().isEmpty()) {
-            throw new Exception(environment.getProperty("CustomerCartService.NO_PRODUCT_ADDED_TO_CART"));
+            throw new Exception("No product added to cart");
         }
         customerCartRepo.delete(cart);
-    }
-
-    public void modifyQuantityOfProductInCart(String customerEmailId, Integer productId, Integer quantity) {
-    }
-
-    public void deleteAllProductsFromCart(String customerEmailId) {
     }
 }

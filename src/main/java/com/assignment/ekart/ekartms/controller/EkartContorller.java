@@ -38,7 +38,7 @@ public class EkartContorller {
             throws Exception {
         log.info("Received a request to add products for " + customerCart.getCustomerEmailId());
         Integer cartId = customerCartService.addProductToCart(customerCart);
-        String message = environment.getProperty("CustomerCartAPI.PRODUCT_ADDED_TO_CART");
+        String message = "Product added to cart";
         return new ResponseEntity<>(message + "  " + cartId, HttpStatus.CREATED);
     }
 
@@ -70,36 +70,8 @@ public class EkartContorller {
             throws Exception {
 
         customerCartService.deleteProductFromCart(customerEmailId, productId);
-        String message = environment.getProperty("CustomerCartAPI.PRODUCT_DELETED_FROM_CART_SUCCESS");
+        String message = "Product deleted from cart success";
         return new ResponseEntity<>(message, HttpStatus.OK);
 
     }
-
-    @PutMapping(value = "/customer/{customerEmailId}/product/{productId}")
-    public ResponseEntity<String> modifyQuantityOfProductInCart(
-            @Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+",
-                    message = "{invalid.email.format}")
-            @PathVariable("customerEmailId") String customerEmailId,
-            @NotNull(message = "{product.id.absent}") @PathVariable("productId") Integer productId,
-            @RequestBody Integer quantity) throws Exception {
-
-        customerCartService.modifyQuantityOfProductInCart(customerEmailId, productId, quantity);
-        String message = environment.getProperty("CustomerCartAPI.PRODUCT_QUANTITY_UPDATE_FROM_CART_SUCCESS");
-        return new ResponseEntity<>(message, HttpStatus.OK);
-    }
-
-    @DeleteMapping(value = "/customer/{customerEmailId}/products")
-    public ResponseEntity<String> deleteAllProductsFromCart(
-            @Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+",
-                    message = "{invalid.email.format}")
-            @PathVariable("customerEmailId") String customerEmailId)
-            throws Exception {
-        log.info("Received a request to clear the cart of "+customerEmailId );
-
-        customerCartService.deleteAllProductsFromCart(customerEmailId);
-        String message = environment.getProperty("CustomerCartAPI.ALL_PRODUCTS_DELETED");
-        return new ResponseEntity<>(message, HttpStatus.OK);
-
-    }
-
 }
