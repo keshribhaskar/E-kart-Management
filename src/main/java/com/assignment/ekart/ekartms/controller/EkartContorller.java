@@ -30,14 +30,12 @@ public class EkartContorller {
     @Autowired
     private Environment environment;
 
-//    @Autowired
-//    private RestTemplate template;
+    @Autowired
+    private RestTemplate template;
 
     @PostMapping(value = "/products")
     public ResponseEntity<String> addProductToCart(@Valid @RequestBody CustomerCart customerCart)
             throws Exception {
-//    public ResponseEntity<String> addProductToCart(@RequestBody CustomerCart customerCart)
-//            throws Exception {
         log.info("Received a request to add products for " + customerCart.getCustomerEmailId());
         Integer cartId = customerCartService.addProductToCart(customerCart);
         String message = environment.getProperty("CustomerCartAPI.PRODUCT_ADDED_TO_CART");
@@ -53,12 +51,12 @@ public class EkartContorller {
         log.info("Received a request to get products details from the cart of "+customerEmailId);
 
         Set<CartProduct> cartProducts = customerCartService.getProductsFromCart(customerEmailId);
-//        for (CartProduct cartProduct : cartProducts) {
-//            Product productDTO = template.getForEntity("http://PRODUCTMS" + "/product-api/product/"
-//                    + cartProduct.getProduct().getProductId(), Product.class).getBody();
-//
-//            cartProduct.setProduct(productDTO);
-//        }
+        for (CartProduct cartProduct : cartProducts) {
+            Product product = template.getForEntity("http://localhost:8082" + "/productApi/product/"
+                    + cartProduct.getProduct().getProductId(), Product.class).getBody();
+
+            cartProduct.setProduct(product);
+        }
         return new ResponseEntity<>(cartProducts, HttpStatus.OK);
 
     }
