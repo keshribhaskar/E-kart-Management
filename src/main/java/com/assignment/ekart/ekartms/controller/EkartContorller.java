@@ -69,7 +69,7 @@ public class EkartContorller {
             @NotNull(message = "{product.id.absent}") @PathVariable("productId") Integer productId)
             throws Exception {
 
-        customerCartService.deleteProductFromCart(customerEmailId, productId);
+        customerCartService.deleteProductFromCart(customerEmailId);
         String message = "Product deleted from cart success";
         return new ResponseEntity<>(message, HttpStatus.OK);
 

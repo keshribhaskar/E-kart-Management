@@ -90,7 +90,7 @@ public class CustomerCartServiceImpl implements CustomerCartService {
         return cartProductsDetail;
     }
 
-    public void deleteProductFromCart(String customerEmailId, Integer productId) throws Exception {
+    public void deleteProductFromCart(String customerEmailId) throws Exception {
         Optional<CustomerCartEntity> cartOptional = customerCartRepo.findByCustomerEmailId(customerEmailId);
         CustomerCartEntity cart = cartOptional.orElseThrow(() -> new Exception(
                 "No cart found"));
