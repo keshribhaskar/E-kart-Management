@@ -3,9 +3,11 @@ package com.assignment.ekart.ekartms.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class CartProduct {
 //    @JsonProperty("cart_Product_Id")
     private Integer cartProductId;
