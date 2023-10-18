@@ -1,0 +1,16 @@
+[
+  {
+    "cartProductId": 1,
+    "product": {
+      "productId": 1,
+      "name": "Shampoo",
+      "description": "hair shampoo",
+      "category": "shampoo",
+      "brand": "Dove",
+      "price": 3.0,
+      "availableQuantity": 850
+    },
+    "quantity": 5
+  }
+]
+
