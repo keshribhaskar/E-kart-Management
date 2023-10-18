@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CartProduct {
-//    @JsonProperty("cart_Product_Id")
+
     private Integer cartProductId;
     @Valid
     @JsonProperty("product")

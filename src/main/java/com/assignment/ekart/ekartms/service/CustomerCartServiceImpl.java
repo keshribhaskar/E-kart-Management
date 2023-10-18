@@ -27,43 +27,6 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     private CustomerCartRepo customerCartRepo;
     public Integer addProductToCart(CustomerCart customerCartDTO) {
 
-        /**
-         * Set<CartProductEntity> cartProducts= new HashSet<>();
-         *         Integer cartId = null;
-         *         for(CartProduct cartProductDTO : customerCartDTO.getCartProducts()) {
-         *             CartProductEntity cartProduct = new CartProductEntity();
-         *             cartProduct.setProductId(cartProductDTO.getProduct().getProductId());
-         *             cartProduct.setQuantity(cartProductDTO.getQuantity());
-         *             cartProducts.add(cartProduct);
-         *         }
-         *         Optional<CustomerCartEntity> cartOptional = customerCartRepo
-         *                 .findByCustomerEmailId(customerCartDTO.getCustomerEmailId());
-         *         if(cartOptional.isEmpty()) {
-         *             CustomerCartEntity newCart = new  CustomerCartEntity();
-         *             newCart.setCustomerEmailId(customerCartDTO.getCustomerEmailId());
-         *             newCart.setCartProducts(cartProducts);
-         *             customerCartRepo.save(newCart);
-         *             cartId = newCart.getCartId();
-         *         }
-         *         else {
-         *             CustomerCartEntity cart = cartOptional.get();
-         *             for(CartProductEntity cartProductToBeAdded: cartProducts) {
-         *                 boolean checkProductAlreadyPresent =false;
-         *                 for(CartProductEntity cartProductFromCart: cart.getCartProducts()) {
-         *                     if(cartProductFromCart.equals(cartProductToBeAdded)) {
-         *                         cartProductFromCart.setQuantity(cartProductToBeAdded.getQuantity()
-         *                                 + cartProductFromCart.getQuantity());
-         *                         checkProductAlreadyPresent=true;
-         *                     }
-         *                 }
-         *                 if(checkProductAlreadyPresent == false) {
-         *                     cart.getCartProducts().add(cartProductToBeAdded);
-         *                 }
-         *             }
-         *             cartId = cart.getCartId();
-         *         }
-         * */
-
         Set<CartProductEntity> cartProducts= new HashSet<>();
         Integer cartId = null;
         for(CartProduct cartProductDTO : customerCartDTO.getCartProducts()) {
@@ -114,16 +77,6 @@ public class CustomerCartServiceImpl implements CustomerCartService {
         }
         Set<CartProductEntity> cartProducts = cart.getCartProducts();
         for (CartProductEntity cartProduct : cartProducts) {
-
-            /**
-            CartProduct cartProductDTO = new CartProduct();
-            cartProductDTO.setCartProductId(cartProduct.getCartProductId());
-            cartProductDTO.setQuantity(cartProduct.getQuantity());
-            Product productDTO = new Product();
-            productDTO.setProductId(cartProduct.getProductId());
-            cartProductDTO.setProduct(productDTO);
-            cartProductsDTO.add(cartProductDTO);
-            * */
 
             Product productDTO = Product.builder().productId(cartProduct.getProductId()).build();
             CartProduct cartProductDTO = CartProduct.builder()
