@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,9 +26,6 @@ public class EkartContorller {
 
     @Autowired
     private CustomerCartService customerCartService;
-
-    @Autowired
-    private Environment environment;
 
     @Autowired
     private RestTemplate template;
