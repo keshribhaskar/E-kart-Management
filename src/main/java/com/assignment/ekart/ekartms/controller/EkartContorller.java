@@ -71,8 +71,7 @@ public class EkartContorller {
     public ResponseEntity<String> deleteProductFromCart(
             @Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+",
                     message = "{invalid.email.format}")
-            @PathVariable("customerEmailId") String customerEmailId,
-            @NotNull(message = "{product.id.absent}") @PathVariable("productId") Integer productId)
+            @PathVariable("customerEmailId") String customerEmailId)
             throws Exception {
 
         customerCartService.deleteProductFromCart(customerEmailId);
