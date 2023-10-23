@@ -8,9 +8,12 @@ import com.assignment.ekart.ekartms.model.Product;
 import com.assignment.ekart.ekartms.repository.CustomerCartRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 
 import java.util.HashSet;
@@ -25,6 +28,11 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     Environment environment;
     @Autowired
     private CustomerCartRepo customerCartRepo;
+    @Autowired
+    private RestTemplate template;
+    @Value("${application.product.name}")
+    private String productApp;
+
     public Integer addProductToCart(CustomerCart customerCart) {
 
         Set<CartProductEntity> cartProducts= new HashSet<>();
@@ -98,5 +106,20 @@ public class CustomerCartServiceImpl implements CustomerCartService {
             throw new Exception("No product added to cart");
         }
         customerCartRepo.delete(cart);
+    }
+
+    public Set<CartProduct> getProducts(Set<CartProduct> cartProducts){
+        try{
+            for (CartProduct cartProduct : cartProducts) {
+                ResponseEntity<Product> response = template.getForEntity("http://"+productApp + "/productApi/product/"
+                        + cartProduct.getProduct().getProductId(), Product.class);
+                Product product = response.getBody();
+                cartProduct.setProduct(product);
+            }
+            return  cartProducts;
+        }catch (Exception e){
+            log.info(e.getMessage());
+            return  cartProducts;
+        }
     }
 }

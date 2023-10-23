@@ -27,18 +27,6 @@ public class EkartContorller {
     @Autowired
     private CustomerCartService customerCartService;
 
-    @Autowired
-    private RestTemplate template;
-
-    @Value("${application.product.name}")
-    private String productApp;
-
-    @Value("${application.kart.name}")
-    private String kartApp;
-
-    @Value("${application.customer.name}")
-    private String customerApp;
-
     @PostMapping(value = "/products")
     public ResponseEntity<String> addProductToCart(@Valid @RequestBody CustomerCart customerCart)
             throws Exception {
@@ -46,25 +34,6 @@ public class EkartContorller {
         Integer cartId = customerCartService.addProductToCart(customerCart);
         String message = "Product added to cart";
         return new ResponseEntity<>(message + "  " + cartId, HttpStatus.CREATED);
-    }
-
-    @GetMapping(value = "/customer/{customerEmailId}/products")
-    public ResponseEntity<Set<CartProduct>> getProductsFromCart(
-            @Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+",
-                    message = "{invalid.email.format}")
-            @PathVariable("customerEmailId") String customerEmailId)
-            throws Exception {
-        log.info("Received a request to get products details from the cart of "+customerEmailId);
-
-        Set<CartProduct> cartProducts = customerCartService.getProductsFromCart(customerEmailId);
-        for (CartProduct cartProduct : cartProducts) {
-            Product product = template.getForEntity("http://"+productApp + "/productApi/product/"
-                    + cartProduct.getProduct().getProductId(), Product.class).getBody();
-
-            cartProduct.setProduct(product);
-        }
-        return new ResponseEntity<>(cartProducts, HttpStatus.OK);
-
     }
 
     @DeleteMapping(value = "/customer/{customerEmailId}/product/{productId}")
@@ -77,6 +46,19 @@ public class EkartContorller {
         customerCartService.deleteProductFromCart(customerEmailId);
         String message = "Product deleted from cart success";
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 
+    //TO DO
+    @GetMapping(value = "/customer/{customerEmailId}/products")
+    public ResponseEntity<Set<CartProduct>> getProductsFromCart(
+            @Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+",
+                    message = "{invalid.email.format}")
+            @PathVariable("customerEmailId") String customerEmailId)
+            throws Exception {
+        log.info("Received a request to get products details from the cart of "+customerEmailId);
+
+        Set<CartProduct> cartProducts = customerCartService.getProductsFromCart(customerEmailId);
+        Set<CartProduct> cartProductsNew = customerCartService.getProducts(cartProducts);
+        return new ResponseEntity<>(cartProductsNew, HttpStatus.OK);
     }
 }

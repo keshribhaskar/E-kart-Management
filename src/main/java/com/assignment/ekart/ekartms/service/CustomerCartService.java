@@ -10,4 +10,5 @@ public interface CustomerCartService {
     Integer addProductToCart(CustomerCart customerCart) throws Exception;
     Set<CartProduct> getProductsFromCart(String customerEmailId) throws Exception;
     void deleteProductFromCart(String customerEmailId) throws Exception;
+    Set<CartProduct> getProducts(Set<CartProduct> cartProducts);
 }
