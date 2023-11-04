@@ -59,8 +59,8 @@ public class ServiceTest {
                 .customerEmailId("k@gmail.com")
                 .cartProducts(cps)
                 .build();
-        int expected = 1;
-        int actual = customerCartService.addProductToCart(cc);
+        String expected = "1";
+        String actual = customerCartService.addProductToCart(cc);
         Assertions.assertEquals(expected,actual);
     }
 
@@ -74,7 +74,7 @@ public class ServiceTest {
                 .build();
         String custEmailId = "k@gmail.com";
         customerCartService.addProductToCart(cc);
-        Set<CartProduct> getProductData = customerCartService.getProductsFromCart(custEmailId);
+        CustomerCart getProductData = customerCartService.getProductsFromCart(custEmailId);
         String actual = mapper.writeValueAsString(getProductData);
         Assertions.assertEquals(expected,actual);
     }

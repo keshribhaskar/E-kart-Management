@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kart-api-deployment
+  labels:
+    app: kart-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kart-api
+  template:
+    metadata:
+      labels:
+        app: kart-api
+    spec:
+      containers:
+        - name: kart-api
+          image: docker.io/keshribhaskar/ekart-mircroservice-app-image-new:v1
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http

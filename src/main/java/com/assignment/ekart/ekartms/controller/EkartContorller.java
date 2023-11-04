@@ -31,9 +31,8 @@ public class EkartContorller {
     public ResponseEntity<String> addProductToCart(@Valid @RequestBody CustomerCart customerCart)
             throws Exception {
         log.info("Received a request to add products for " + customerCart.getCustomerEmailId());
-        Integer cartId = customerCartService.addProductToCart(customerCart);
-        String message = "Product added to cart";
-        return new ResponseEntity<>(message + "  " + cartId, HttpStatus.CREATED);
+        String message = customerCartService.addProductToCart(customerCart);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/customer/{customerEmailId}/product/{productId}")
@@ -48,17 +47,15 @@ public class EkartContorller {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    //TO DO
     @GetMapping(value = "/customer/{customerEmailId}/products")
-    public ResponseEntity<Set<CartProduct>> getProductsFromCart(
+    public ResponseEntity<CustomerCart> getProductsFromCart(
             @Pattern(regexp = "[a-zA-Z0-9._]+@[a-zA-Z]{2,}\\.[a-zA-Z][a-zA-Z.]+",
                     message = "{invalid.email.format}")
             @PathVariable("customerEmailId") String customerEmailId)
             throws Exception {
         log.info("Received a request to get products details from the cart of "+customerEmailId);
 
-        Set<CartProduct> cartProducts = customerCartService.getProductsFromCart(customerEmailId);
-        Set<CartProduct> cartProductsNew = customerCartService.getProducts(cartProducts);
-        return new ResponseEntity<>(cartProductsNew, HttpStatus.OK);
+        CustomerCart cartProducts = customerCartService.getProductsFromCart(customerEmailId);
+        return new ResponseEntity<>(cartProducts, HttpStatus.OK);
     }
 }

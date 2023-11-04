@@ -33,7 +33,7 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     @Value("${application.product.name}")
     private String productApp;
 
-    public Integer addProductToCart(CustomerCart customerCart) {
+    public String addProductToCart(CustomerCart customerCart) {
 
         Set<CartProductEntity> cartProducts= new HashSet<>();
         Integer cartId = null;
@@ -71,10 +71,10 @@ public class CustomerCartServiceImpl implements CustomerCartService {
             }
             cartId = cart.getCartId();
         }
-        return cartId;
+        return "Product added to cart in cartId " + cartId;
     }
 
-    public Set<CartProduct> getProductsFromCart(String customerEmailId) throws Exception {
+    public CustomerCart getProductsFromCart(String customerEmailId) throws Exception {
         Optional<CustomerCartEntity> cartOptional = customerCartRepo
                 .findByCustomerEmailId(customerEmailId);
         Set<CartProduct> cartProductsDetail = new HashSet<>();
@@ -85,17 +85,18 @@ public class CustomerCartServiceImpl implements CustomerCartService {
         }
         Set<CartProductEntity> cartProducts = cart.getCartProducts();
         for (CartProductEntity cartProduct : cartProducts) {
-
             Product product = Product.builder().productId(cartProduct.getProductId()).build();
             CartProduct cartProduct1 = CartProduct.builder()
-                    .cartProductId(cartProduct.getCartProductId())
                     .quantity(cartProduct.getQuantity())
                     .product(product)
                     .build();
             cartProductsDetail.add(cartProduct1);
-
         }
-        return cartProductsDetail;
+        cartProductsDetail = getProducts(cartProductsDetail);
+        CustomerCart customerCart = CustomerCart.builder().cartId(cart.getCartId())
+                .customerEmailId(cart.getCustomerEmailId())
+                .cartProducts(cartProductsDetail).build();
+        return customerCart;
     }
 
     public void deleteProductFromCart(String customerEmailId) throws Exception {
@@ -111,7 +112,7 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     public Set<CartProduct> getProducts(Set<CartProduct> cartProducts){
         try{
             for (CartProduct cartProduct : cartProducts) {
-                ResponseEntity<Product> response = template.getForEntity("http://"+productApp + "/productApi/product/"
+                ResponseEntity<Product> response = template.getForEntity("http://"+ productApp + "/productApi/product/"
                         + cartProduct.getProduct().getProductId(), Product.class);
                 Product product = response.getBody();
                 cartProduct.setProduct(product);

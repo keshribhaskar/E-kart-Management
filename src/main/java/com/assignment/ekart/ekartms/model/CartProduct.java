@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartProduct {
 
-    private Integer cartProductId;
     @Valid
     @JsonProperty("product")
     private Product product;
