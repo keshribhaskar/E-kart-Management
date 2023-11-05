@@ -48,7 +48,6 @@ public class EkartContorllerTest {
                 .availableQuantity(320)
                 .build();
         CartProduct cartProduct = CartProduct.builder()
-                .cartProductId(1)
                 .product(product)
                 .quantity(5)
                 .build();

@@ -8,16 +8,11 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.assignment.ekart.ekartms.config.Constant.*;
+
 @Configuration
 public class OpenApiConfig {
 
-    private static final String APP_TITLE = "ekartApp";
-    private static final String APP_VERSION = "1.0";
-    private static final String APP_DESC = "E-kart application for kart demo";
-    private static final String SCHEME_NAME = "bearer";
-    private static final String SECURITY_SCHEME_NAME = "bearerAuth";
-    private static final String SCHEME_DECRIPTION = "Provide JWT token";
-    private static final String BEARER_FORMAT = "JWT";
 
     @Bean
     public OpenAPI customOpenAPI(){

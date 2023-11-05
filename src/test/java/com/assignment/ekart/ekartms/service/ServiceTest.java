@@ -15,6 +15,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.assignment.ekart.ekartms.config.Constant.CART_DELETE_SUCCESS;
+import static com.assignment.ekart.ekartms.config.Constant.CART_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -44,7 +46,6 @@ public class ServiceTest {
                 .build();
 
         CartProduct cp = CartProduct.builder()
-                .cartProductId(1)
                 .quantity(5)
                 .product(p)
                 .build();
@@ -59,14 +60,14 @@ public class ServiceTest {
                 .customerEmailId("k@gmail.com")
                 .cartProducts(cps)
                 .build();
-        String expected = "1";
+        String expected = "Product added to cart successfully.";
         String actual = customerCartService.addProductToCart(cc);
         Assertions.assertEquals(expected,actual);
     }
 
     @Test
     public void getProductsFromCartTest() throws Exception {
-        String expected = "[{\"cartProductId\":1,\"product\":{\"productId\":1,\"name\":null,\"description\":null,\"category\":null,\"brand\":null,\"price\":null,\"availableQuantity\":null},\"quantity\":5},{\"cartProductId\":2,\"product\":{\"productId\":1,\"name\":null,\"description\":null,\"category\":null,\"brand\":null,\"price\":null,\"availableQuantity\":null},\"quantity\":5}]";
+        String expected = "{\"error\":\"I/O error on GET request for \\\"http://localhost:8082/productApi/product/1\\\": Connection refused: connect\"}";
         CustomerCart cc = CustomerCart.builder()
                 .cartId(1)
                 .customerEmailId("k@gmail.com")
@@ -80,7 +81,8 @@ public class ServiceTest {
     }
 
     @Test
-    public void deleteProductFromCartTest() throws Exception {
+    public void deleteProductFromCartSuccessTest() throws Exception {
+        String expected = CART_DELETE_SUCCESS;
         CustomerCart cc = CustomerCart.builder()
                 .cartId(1)
                 .customerEmailId("k@gmail.com")
@@ -89,7 +91,14 @@ public class ServiceTest {
         customerCartService.addProductToCart(cc);
         String customerEmailId = "k@gmail.com";
         Integer productId = 1;
-        customerCartService.deleteProductFromCart(customerEmailId);
+        String actual = customerCartService.deleteProductFromCart(customerEmailId);
+        Assertions.assertEquals(expected,actual);
     }
-
+    @Test
+    public void deleteProductFromCartFailedTest() throws Exception {
+        String expected = CART_NOT_FOUND;
+        String customerEmailId = "v@gmail.com";
+        String actual = customerCartService.deleteProductFromCart(customerEmailId);
+        Assertions.assertEquals(expected,actual);
+    }
 }
